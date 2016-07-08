@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.getkeepsafe.dexcount'
+// apply plugin: 'io.fabric'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        applicationId "com.ch3d.android.mock"
+        minSdkVersion 18
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url 'http://lorenzo.villani.me/android-cropimage/' }
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile(libs.crashlytics) { transitive = true }
+    compile libs.recyclerAnimators
+    compile libs.scribe
+    compile libs.supportDesign
+    compile libs.supportCardView
+    compile libs.supportRecyclerView
+    compile libs.supportAppCompat
+
+    compile libs.eventBus
+    compile libs.butterKnife
+    compile libs.roundImage
+    compile libs.calligraphy
+    compile libs.stickyHeaders
+    compile libs.cropImage
+
+    testCompile libs.junit
+    testCompile libs.mockito
+    testCompile libs.robolectric
+
+    androidTestCompile libs.supportAnnotations
+    androidTestCompile libs.supportDesign
+    androidTestCompile libs.supportTestRunner
+    androidTestCompile libs.supportTestRules
+    androidTestCompile libs.espresso
+    androidTestCompile libs.espressoContrib
+    androidTestCompile libs.supportTestUiAutomator
+    androidTestCompile libs.mockito
+    androidTestCompile libs.dexmaker
+    androidTestCompile libs.dexmakerDx
+    androidTestCompile libs.dexmakerMockito
+}
