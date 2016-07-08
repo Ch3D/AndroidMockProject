@@ -6,6 +6,19 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
+    dexOptions {
+        preDexLibraries = false
+    }
+
+    lintOptions {
+        // set to true to turn off analysis progress reporting by lint
+        quiet false
+        // if true, stop the gradle build if errors are found
+        abortOnError false
+        // if true, only report errors
+        ignoreWarnings true
+    }
+
     defaultConfig {
         applicationId "com.ch3d.android.mock"
         minSdkVersion 18
@@ -13,10 +26,59 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude '.readme'
+    }
+
+    signingConfigs {
+        release {
+            Properties releaseProps = new Properties()
+            releaseProps.load(new FileInputStream('./signing-keys/release.properties'))
+            storeFile file('../signing-keys/release-key.jks')
+            storePassword releaseProps['keystore.password']
+            keyAlias releaseProps['keyAlias']
+            keyPassword releaseProps['keyPassword']
+        }
+        debug {
+            Properties releaseProps = new Properties()
+            releaseProps.load(new FileInputStream('./signing-keys/debug.properties'))
+            storeFile file('../signing-keys/debug-key.jks')
+            storePassword releaseProps['keystore.password']
+            keyAlias releaseProps['keyAlias']
+            keyPassword releaseProps['keyPassword']
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue "string", "app_name", "AndroidMock"
+            resValue "string", "google_maps_key", "google_maps_key"
+            resValue "string", "google_analytics_id", "google_analytics_prj_id"
+        }
+
+        debug {
+            minifyEnabled false
+            debuggable true
+            signingConfig signingConfigs.debug
+            applicationIdSuffix '.debug'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue "string", "app_name", "AndroidMock Debug"
+            resValue "string", "google_maps_key", "google_maps_key"
+            resValue "string", "google_analytics_id", "google_analytics_prj_id"
         }
     }
 }
