@@ -81,6 +81,23 @@ android {
             resValue "string", "google_analytics_id", "google_analytics_prj_id"
         }
     }
+
+    productFlavors {
+        dev {
+            minSdkVersion 21
+        }
+        production {
+        }
+    }
+}
+
+android.variantFilter { variant ->
+    if (variant.buildType.name.equals('release') && variant.getFlavors().get(0).name.equals('dev')) {
+        variant.setIgnore(true);
+    }
+    if (variant.buildType.name.equals('debug') && variant.getFlavors().get(0).name.equals('production')) {
+        variant.setIgnore(true);
+    }
 }
 
 repositories {
